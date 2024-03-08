@@ -32,6 +32,11 @@ docker exec rabbitmq rabbitmqadmin declare exchange --vhost=customers name=custo
 docker exec rabbitmq rabbitmqctl set_topic_permissions -p customers dave customer_events ".*" ".*"
 
 ```
+```
+docker exec rabbitmq rabbitmqadmin declare exchange --vhost=customers name=customer_callbacks type=direct -u dave -p 1234 durable=true
+docker exec rabbitmq rabbitmqctl set_topic_permissions -p customers dave customer_callbacks ".*" ".*"
+```
+
 
 ## Queue Parameters
 - Durable       (persists)
