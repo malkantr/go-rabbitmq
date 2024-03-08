@@ -39,9 +39,12 @@ func (rc RabbitClient) Close() error {
 	return rc.ch.Close()
 }
 
-func (rc RabbitClient) CreateQueue(queueName string, durable, autodelete bool) error {
-	_, err := rc.ch.QueueDeclare(queueName, durable, autodelete, false, false, nil)
-	return err
+func (rc RabbitClient) CreateQueue(queueName string, durable, autodelete bool) (amqp.Queue, error) {
+	q, err := rc.ch.QueueDeclare(queueName, durable, autodelete, false, false, nil)
+	if err != nil {
+		return amqp.Queue{}, nil
+	}
+	return q, err
 }
 
 // CreateBinding will bind the current channel to the given exchange using the routingkey provided

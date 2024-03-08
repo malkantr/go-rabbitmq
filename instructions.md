@@ -25,6 +25,14 @@ docker exec rabbitmq rabbitmqadmin declare exchange --vhost=customers name=custo
 docker exec rabbitmq rabbitmqctl set_topic_permissions -p customers dave customer_events "^customers.*" "^customers.*"
 ```
 
+```
+// reset exchange for pub-sub/fanout
+docker exec rabbitmq rabbitmqadmin delete exchange name=customer_events --vhost=customers -u dave -p 1234
+docker exec rabbitmq rabbitmqadmin declare exchange --vhost=customers name=customer_events type=fanout -u dave -p 1234 durable=true
+docker exec rabbitmq rabbitmqctl set_topic_permissions -p customers dave customer_events ".*" ".*"
+
+```
+
 ## Queue Parameters
 - Durable       (persists)
 - AutoDelete
