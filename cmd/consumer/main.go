@@ -12,13 +12,21 @@ import (
 )
 
 func main(){
-	conn, err := internal.ConnectRabbitMQ("dave", "1234", "localhost:5672", "customers")
+	conn, err := internal.ConnectRabbitMQ("dave", "1234", "localhost:5671", "customers",
+	"/home/path/tls-gen/basic/result/ca_certificate.pem",
+	"/home/path/tls-gen/basic/result/client_PCNAME_certificate.pem",
+	"/home/path/tls-gen/basic/result/client_PCNAME_key.pem",
+	)
 	if err != nil {
 		panic(err)
 	}
 	defer conn.Close()
 
-	publishConn, err := internal.ConnectRabbitMQ("dave","1234", "localhost:5672", "customers")
+	publishConn, err := internal.ConnectRabbitMQ("dave","1234", "localhost:5671", "customers",
+	"/home/path/tls-gen/basic/result/ca_certificate.pem",
+	"/home/path/tls-gen/basic/result/client_PCNAME_certificate.pem",
+	"/home/path/tls-gen/basic/result/client_PCNAME_key.pem",
+	)
 	if err != nil {
 		panic(err)
 	}
@@ -59,6 +67,11 @@ func main(){
 	
 	g, ctx :=errgroup.WithContext(ctx)
 
+	// Apply a Hard limit on the server
+	if err := client.ApplyQos(10, 0, true); err != nil {
+		panic(err)
+	}
+
 	// errgroup allows us concurrent tasks
 	g.SetLimit(10)
 
@@ -82,7 +95,7 @@ func main(){
 				}); err != nil{
 					panic(err)
 				} 
-				
+
 				log.Printf("Acknowledge message %s\n", message.MessageId)
 				return nil
 			})

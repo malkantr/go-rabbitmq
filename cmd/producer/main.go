@@ -12,13 +12,21 @@ import (
 )
 
 func main() {
-	conn, err := internal.ConnectRabbitMQ("dave","1234","localhost:5672","customers")
+	conn, err := internal.ConnectRabbitMQ("dave","1234","localhost:5671","customers",
+	"/home/path/tls-gen/basic/result/ca_certificate.pem",
+	"/home/path/tls-gen/basic/result/client_PCNAME_certificate.pem",
+	"/home/path/tls-gen/basic/result/client_PCNAME_key.pem",
+	)
 	if err != nil {
 		panic(err)
 	}
 	defer conn.Close()
 	// all consuming will be done on this Connection
-	consumeConn, err := internal.ConnectRabbitMQ("dave","1234","localhost:5672","customers")
+	consumeConn, err := internal.ConnectRabbitMQ("dave","1234","localhost:5671","customers",
+	"/home/path/tls-gen/basic/result/ca_certificate.pem",
+	"/home/path/tls-gen/basic/result/client_PCNAME_certificate.pem",
+	"/home/path/tls-gen/basic/result/client_PCNAME_key.pem",
+	)
 	if err != nil {
 		panic(err)
 	}
